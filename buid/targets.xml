@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<project name="targetsbuild" baseDir="." default="publish">
+  <include buildfile="./properties.xml" failonerror="true"/>
+
+  <target name="restore-packages">
+    <exec program="${nuget.exe}">
+      <arg line="restore ${solution-path} -Verbosity detailed" />
+    </exec>
+  </target>
+
+  <target name="build" depends="restore-packages">
+    <exec program="${msbuild.exe}" >
+      <arg line='"${solution-path}"' />
+      <arg value="/property:Configuration=${configuration};Platform=${platform}" />
+      <arg value="/t:Rebuild" />
+    </exec>
+  </target>
+
+  <target name="set-test-assemblies">
+    <property name="test-assemblies" value="" />
+
+    <foreach item="File" property="test-file" verbose="true">
+      <in>
+        <items basedir=".">
+          <include name="${source-dir}\**\*.Test.dll" />
+          <exclude name="${source-dir}\**\obj\**\*.dll" />
+        </items>
+      </in>
+      <do>
+        <property name="test-assemblies" value="${test-assemblies} &quot;${test-file}&quot;" />
+        <echo message="Including ${test-file}..." />
+      </do>
+    </foreach>
+  </target>
+
+  <target name="test" depends="build, set-test-assemblies" >
+    <exec program="${nunit.exe}" commandline="${test-assemblies} /framework=4.0" failonerror="true" />
+  </target>
+
+  <target name="publish" depends="build, test">
+    <copy file="${source-dir}\Versioner\bin\release\Versioner.exe" 
+          tofile="${tools-dir}\versioner\versioner.exe" 
+          overwrite="true" />
+  </target>
+</project>

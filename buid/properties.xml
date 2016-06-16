@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<project name="propertiesbuild" baseDir=".">
+  <property name="source-dir" value=".\..\source" />
+  <property name="solution-path" value="${source-dir}\Versioner.sln" />
+  <property name="configuration" value="Release" />
+  <property name="platform" value="Any CPU" />
+
+  <property name="jenkins-dir" value="${environment::get-variable('jenkins_home'}" />
+  <property name="tools-dir" value="${jenkins-dir}\tools" />
+  <property name="msbuild.exe" value="${environment::get-variable('msbuild.exe')}" />
+  <property name="nunit.exe" value="${environment::get-variable('nunit.exe')}" />
+  <property name="nuget.exe" value="${environment::get-variable('nuget.exe')}" />
+</project>
