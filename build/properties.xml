@@ -6,7 +6,7 @@
   <property name="configuration" value="Release" />
   <property name="platform" value="Any CPU" />
 
-  <property name="tools-dir" value="${environment::get-variable('tools-dir'}" />
+  <property name="tools-dir" value="${environment::get-variable('tools-dir')}" />
   <property name="msbuild.exe" value="${environment::get-variable('msbuild.exe')}" />
   <property name="nunit.exe" value="${environment::get-variable('nunit.exe')}" />
   <property name="nuget.exe" value="${environment::get-variable('nuget.exe')}" />
