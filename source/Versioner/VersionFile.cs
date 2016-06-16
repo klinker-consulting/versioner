@@ -5,6 +5,7 @@ namespace Versioner
 {
     public interface IVersionFile
     {
+        string Path { get; }
         string GetVersion();
         void Increment();
         void Initialize();
@@ -12,12 +13,14 @@ namespace Versioner
 
     public class VersionFile : IVersionFile
     {
-        private readonly string _versionFilePath;
+        private readonly string _versionFileKey;
 
-        public VersionFile(string versionFilePath)
+        public VersionFile(string versionFileKey)
         {
-            _versionFilePath = versionFilePath;
+            _versionFileKey = versionFileKey;
         }
+
+        public string Path => System.IO.Path.Combine(Directory.GetCurrentDirectory(), _versionFileKey);
 
         public string GetVersion()
         {
@@ -38,24 +41,24 @@ namespace Versioner
         {
             if (VersionFileExists())
                 return;
-            File.WriteAllText(_versionFilePath, "1.0.0.0");
+            File.WriteAllText(_versionFileKey, "1.0.0.0");
         }
 
         private void IncrementVersion()
         {
             var currentVersion = new Version(GetVersion());
             var newVersion = new Version(currentVersion.Major, currentVersion.Minor, currentVersion.Build, currentVersion.Revision + 1);
-            File.WriteAllText(_versionFilePath, newVersion.ToString());
+            File.WriteAllText(_versionFileKey, newVersion.ToString());
         }
 
         private bool VersionFileExists()
         {
-            return File.Exists(_versionFilePath);
+            return File.Exists(_versionFileKey);
         }
 
         private string GetVersionFromFile()
         {
-            return File.ReadAllText(_versionFilePath);
+            return File.ReadAllText(_versionFileKey);
         }
     }
 }
